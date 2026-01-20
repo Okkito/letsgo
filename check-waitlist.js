@@ -21,13 +21,16 @@ async function checkWaitlist() {
   const browser = await chromium.launch();
   const page = await browser.newPage();
 
-  await page.goto(URL, { waitUntil: "load", timeout: 60000 });
+  await page.goto(URL, { waitUntil: "networkidle" }); // espera JS dinámico
+
+  // Espera hasta 10s a que la página cargue su contenido
+  await page.waitForSelector("body", { timeout: 10000 });
 
   const isClosed = await page.evaluate(() => {
     return document.body.innerText.includes("Registration is closed at the moment");
   });
 
-  const isOpen = !isClosed 
+  const isOpen = !isClosed;
 
   if (isOpen) {
     await sendTelegram(
@@ -41,7 +44,7 @@ async function checkWaitlist() {
   await browser.close();
 }
 
-// LOOP infinito
+// LOOP infinito cada 2 min
 (async () => {
   while (true) {
     try {
@@ -49,7 +52,6 @@ async function checkWaitlist() {
     } catch (e) {
       console.error("Error en el check:", e);
     }
-    // Espera 2 minutos
     await new Promise(r => setTimeout(r, 2 * 60 * 1000));
   }
 })();
