@@ -1,4 +1,4 @@
-name: Waitwhile Watcher
+name: Waitlist Watcher
 
 on:
   schedule:
