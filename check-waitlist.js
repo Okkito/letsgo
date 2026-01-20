@@ -32,7 +32,7 @@ async function checkWaitlist() {
 
   const isOpen = !isClosed;
 
-  if (isOpen) {
+  if (isClosed) {
     await sendTelegram(
       "WAITLIST ABIERTA \nhttps://waitwhile.com/locations/londoneuic2026"
     );
