@@ -17,32 +17,39 @@ async function sendTelegram(msg) {
   });
 }
 
-(async () => {
+async function checkWaitlist() {
   const browser = await chromium.launch();
   const page = await browser.newPage();
 
   await page.goto(URL, { waitUntil: "load", timeout: 60000 });
 
-
-  //const isOpen = await page.evaluate(() =>
-  //  document.body.innerText.includes("Join waitlist")
-  //);
-
   const isClosed = await page.evaluate(() => {
-  return document.body.innerText.includes("Registration is closed at the moment");
+    return document.body.innerText.includes("Registration is closed at the moment");
   });
 
   const isOpen = !isClosed || !!document.querySelector('button:contains("Join waitlist")') || document.body.innerText.includes("Join waitlist");
-
 
   if (isOpen) {
     await sendTelegram(
       "WAITLIST ABIERTA \nhttps://waitwhile.com/locations/londoneuic2026"
     );
   } else {
-    await sendTelegram(" Aún cerrada la waitlist. Test OK ");
+    console.log("Aún cerrada la waitlist. Test OK");
   }
 
   console.log(isOpen ? "ABIERTA" : "CERRADA");
   await browser.close();
+}
+
+// LOOP infinito
+(async () => {
+  while (true) {
+    try {
+      await checkWaitlist();
+    } catch (e) {
+      console.error("Error en el check:", e);
+    }
+    // Espera 2 minutos
+    await new Promise(r => setTimeout(r, 2 * 60 * 1000));
+  }
 })();
