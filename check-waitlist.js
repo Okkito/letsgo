@@ -21,7 +21,7 @@ async function checkWaitlist() {
   const browser = await chromium.launch();
   const page = await browser.newPage();
 
-  await page.goto(URL, { waitUntil: "networkidle" }); // espera JS dinámico
+  //await page.goto(URL, { waitUntil: "networkidle" }); // espera JS dinámico
 
   // Espera hasta 10s a que la página cargue su contenido
   await page.goto(URL, { waitUntil: "networkidle", timeout: 60000 }); // 60 segundos
@@ -32,7 +32,7 @@ async function checkWaitlist() {
 
   const isOpen = !isClosed;
 
-  if (isClosed) {
+  if (isOpen) {
     await sendTelegram(
       "WAITLIST ABIERTA \nhttps://waitwhile.com/locations/londoneuic2026"
     );
