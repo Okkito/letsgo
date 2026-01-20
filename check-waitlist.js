@@ -24,9 +24,16 @@ async function sendTelegram(msg) {
   await page.goto(URL, { waitUntil: "load", timeout: 60000 });
 
 
-  const isOpen = await page.evaluate(() =>
-    document.body.innerText.includes("Join waitlist")
-  );
+  //const isOpen = await page.evaluate(() =>
+  //  document.body.innerText.includes("Join waitlist")
+  //);
+
+  const isClosed = await page.evaluate(() => {
+  return document.body.innerText.includes("Registration is closed at the moment");
+  });
+
+  const isOpen = !isClosed || !!document.querySelector('button:contains("Join waitlist")') || document.body.innerText.includes("Join waitlist");
+
 
   if (isOpen) {
     await sendTelegram(
