@@ -37,7 +37,7 @@ async function checkWaitlist() {
       "WAITLIST ABIERTA \nhttps://waitwhile.com/locations/londoneuic2026"
     );
   } else {
-    console.log("Aún cerrada la waitlist. Test OK");
+    await sendTelegram("Aún cerrada la waitlist. Test OK");
   }
 
   console.log(isOpen ? "ABIERTA" : "CERRADA");
