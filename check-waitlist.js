@@ -21,7 +21,8 @@ async function sendTelegram(msg) {
   const browser = await chromium.launch();
   const page = await browser.newPage();
 
-  await page.goto(URL, { waitUntil: "networkidle" });
+  await page.goto(URL, { waitUntil: "load", timeout: 60000 });
+
 
   const isOpen = await page.evaluate(() =>
     document.body.innerText.includes("Join waitlist")
@@ -29,10 +30,10 @@ async function sendTelegram(msg) {
 
   if (isOpen) {
     await sendTelegram(
-      "🚨 WAITLIST ABIERTA 🚨\nhttps://waitwhile.com/locations/londoneuic2026"
+      "WAITLIST ABIERTA \nhttps://waitwhile.com/locations/londoneuic2026"
     );
   } else {
-    await sendTelegram("⏳ Aún cerrada la waitlist. Test OK ✅");
+    await sendTelegram(" Aún cerrada la waitlist. Test OK ");
   }
 
   console.log(isOpen ? "ABIERTA" : "CERRADA");
