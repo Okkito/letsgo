@@ -1,5 +1,4 @@
 import { chromium } from "playwright";
-import fetch from "node-fetch"; // para Node <18
 
 const URL = "https://waitwhile.com/locations/londoneuic2026";
 
@@ -13,6 +12,7 @@ async function sendTelegram(msg) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ chat_id: chatId, text: msg, disable_web_page_preview: true }),
     });
+
     if (!res.ok) {
       console.error("Error enviando Telegram:", await res.text());
     }
@@ -36,7 +36,9 @@ async function checkWaitlist() {
     const isOpen = !isClosed;
 
     if (isOpen) {
-      await sendTelegram("WAITLIST ABIERTA \nhttps://waitwhile.com/locations/londoneuic2026");
+      await sendTelegram(
+        "WAITLIST ABIERTA \nhttps://waitwhile.com/locations/londoneuic2026"
+      );
     } else {
       await sendTelegram("Aún cerrada la waitlist. Test OK");
     }
@@ -49,14 +51,10 @@ async function checkWaitlist() {
   }
 }
 
-// LOOP infinito cada 2 min
 (async () => {
-  while (true) {
-    try {
-      await checkWaitlist();
-    } catch (e) {
-      console.error("Error en el loop principal:", e);
-    }
-    await new Promise(r => setTimeout(r, 2 * 60 * 1000));
+  try {
+    await checkWaitlist();
+  } catch (e) {
+    console.error("Error general:", e);
   }
 })();
