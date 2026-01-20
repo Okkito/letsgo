@@ -27,7 +27,7 @@ async function checkWaitlist() {
     return document.body.innerText.includes("Registration is closed at the moment");
   });
 
-  const isOpen = !isClosed || !!document.querySelector('button:contains("Join waitlist")') || document.body.innerText.includes("Join waitlist");
+  const isOpen = !isClosed 
 
   if (isOpen) {
     await sendTelegram(
