@@ -6,9 +6,7 @@ async function sendTelegram(msg) {
   const token = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;
 
-  const url = `https://api.telegram.org/bot${token}/sendMessage`;
-
-  await fetch(url, {
+  await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -25,17 +23,18 @@ async function sendTelegram(msg) {
 
   await page.goto(URL, { waitUntil: "networkidle" });
 
-  const isOpen = await page.evaluate(() => {
-    return document.body.innerText.includes("Join waitlist");
-  });
+  const isOpen = await page.evaluate(() =>
+    document.body.innerText.includes("Join waitlist")
+  );
 
   if (isOpen) {
     await sendTelegram(
       "🚨 WAITLIST ABIERTA 🚨\nhttps://waitwhile.com/locations/londoneuic2026"
     );
-    process.exit(1);
+  } else {
+    await sendTelegram("⏳ Aún cerrada la waitlist. Test OK ✅");
   }
 
-  console.log("Still closed");
+  console.log(isOpen ? "ABIERTA" : "CERRADA");
   await browser.close();
 })();
