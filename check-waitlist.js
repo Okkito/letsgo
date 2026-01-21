@@ -36,10 +36,24 @@ async function checkWaitlist() {
     await page.goto(URL, { waitUntil: "load", timeout: 60000 });
     await page.waitForSelector("body", { timeout: 10000 });
 
-    const isClosed = await page.evaluate(() =>
+    /*const isClosed = await page.evaluate(() =>
       document.body.innerText.includes("Registration is closed at the moment")
     );
+    */
 
+    const closedText = "Registration is closed at the moment";
+    try {
+      await page.waitForFunction(
+        text => document.body.innerText.includes(text),
+        closedText,
+        { timeout: 10000 }
+      );
+      // Si llega aquí, significa que el texto apareció
+      isClosed = true;
+    } catch {
+      // Si no aparece en 10s, asumimos que NO está cerrado
+      isClosed = false;
+    }
     const isOpen = !isClosed;
 
     if (isOpen) {
@@ -47,8 +61,8 @@ async function checkWaitlist() {
         "WAITLIST ABIERTA \nhttps://waitwhile.com/locations/londoneuic2026"
       );
     } else {
-      //await sendTelegram("Aún cerrada la waitlist. Test OK");
-      console.log("Aún cerrada la waitlist. Test OK");
+      await sendTelegram("Aún cerrada la waitlist. Test OK");
+      //console.log("Aún cerrada la waitlist. Test OK");
     }
 
     console.log(isOpen ? "ABIERTA" : "CERRADA");
