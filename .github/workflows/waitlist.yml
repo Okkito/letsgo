@@ -1,8 +1,8 @@
 name: Waitlist Watcher
 
 on:
-  schedule:
-    - cron: '*/2 * * * *' # cada 5 min
+  #schedule:
+  #  - cron: '*/2 * * * *' # cada 5 min
   workflow_dispatch:
 
 jobs:
