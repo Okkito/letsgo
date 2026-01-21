@@ -40,7 +40,7 @@ async function checkWaitlist() {
       document.body.innerText.includes("Registration is closed at the moment")
     );
     */
-
+    let isClosed = true
     const closedText = "Registration is closed at the moment";
     try {
       await page.waitForFunction(
