@@ -6,6 +6,11 @@ async function sendTelegram(msg) {
   const token = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;
 
+  console.log("Intentando enviar Telegram:");
+  console.log("TOKEN:", token ? "✅ presente" : "❌ ausente");
+  console.log("CHAT_ID:", chatId ? chatId : "❌ ausente");
+  console.log("Mensaje:", msg);
+
   try {
     const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
       method: "POST",
@@ -15,6 +20,8 @@ async function sendTelegram(msg) {
 
     if (!res.ok) {
       console.error("Error enviando Telegram:", await res.text());
+    } else {
+      console.log("Mensaje enviado correctamente ✅");
     }
   } catch (e) {
     console.error("Excepción en sendTelegram:", e);
